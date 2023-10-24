@@ -1,0 +1,247 @@
+﻿@{
+    ViewBag.Title = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="card">
+    <div class="card-header">
+        <div>
+            <h3 class="card-title"> Khách hàng:</h3>
+        </div>
+        <div style="float:right">
+            <button class="btn btn-primary" id="create_sp">
+                Tạo mới
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <table id="dataTable" class="table table-bordered  dataTable">
+            <thead>
+                <tr class="text-center">
+                    <th style="text-align: center; width: 15%">STT</th>
+                    <th style="text-align: center; width: 15%">Mã khách hàng </th>
+                    <th style="text-align: center; width: 20%">Ngày tiêm </th>
+                    <th style="text-align: center; width: 20%">Địa điểm tiêm </th>
+                    <th style="text-align: center; width: 15%">Trạng thái</th>
+                    <th style="text-align: center; width: 25%">Cập nhật trạng thái </th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int index = 1;
+                    string ma = "KH0";
+                    foreach (var item in ViewBag.result)
+                    {
+                                <tr>
+                                    <td style="text-align:center">
+                                        @index
+                                    </td>
+                                    <td style="text-align:center">
+                                        @ma@item.IdKH
+                                    </td>
+                                    <td style="text-align:center">
+                                        @item.NgayTiem.ToString("dd/mm/yyyy")
+                                    </td>
+                                    <td style="text-align:center">
+                                        @item.DiaDiemTiem
+                                    </td>
+                                    @if (item.TrangThai == 1)
+                                    {
+                                        <td style="text-align:center">
+                                            Chưa tiêm
+                                        </td>
+                                    }
+                                    else if (item.TrangThai == 2)
+                                    {
+                                        <td style="text-align:center">
+                                            Đã tiêm
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td style="text-align:center">
+                                            Từ chối 
+                                        </td>
+                                    }
+                                    <td style="text-align:center">
+                                        <a id="update_" href="#" onclick="update_('@item.Id')"><i class="fas fa-edit"></i></a>
+                                    </td>
+                                </tr>
+                        index++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal CRUD -->
+<div class="modal fade" id="create_view" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Cập nhật trạng thái tiêm </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="ma" hidden>
+                        </div>
+                        <div class="form-group">
+                            <label for="tendl">Mã khách hàng </label>
+                            <input type="text" class="form-control" id="idkh" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="chinhanh"> Trạng thái </label>
+                            <select class="form-control" id="trangthai">
+                                <option value="2">Đã tiêm</option>
+                                <option value="1">Chưa tiêm</option>
+                                <option value="3">Từ chối</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="create">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="delete_view" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Delete</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="card-body">
+                        <h4>Bạn chắc chắn xóa hồ sơ này?</h4>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Colse</button>
+                <button type="button" class="btn btn-primary" id="delete">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#create_sp").click(function () {
+        $('#idkh').val("");
+        $('#create_view').modal('show');
+    });
+    $("#create").click(function () {
+        $('#overlay').show();
+        var data =
+        {
+            Id: $('#ma').val(),
+            TrangThai: $('#trangthai').val(),
+        };
+        $.ajax({
+            type: 'GET',
+            url: 'CreateOrUpdate',
+            data: data,
+            success: function (response) {
+                if (response == false) {
+                    $(document).Toasts('create', {
+                        icon: 'fas fa-exclamation-triangle',
+                        position: 'bottomRight',
+                        class: 'bg-danger m-1',
+                        autohide: true,
+                        delay: 2000,
+                        title: 'Lỗi!',
+                        body: 'Đã có lỗi xảy ra!'
+                    });
+                }
+                else {
+                    $(document).Toasts('create', {
+                        icon: 'fas fa-exclamation-triangle',
+                        position: 'bottomRight',
+                        class: 'bg-success m-1',
+                        autohide: true,
+                        title: 'Notification!',
+                        body: 'Successs!'
+                    });
+                    $('#create_view').modal('hide');
+                    location.reload();
+                }
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        })
+    });
+    function update_(id) {
+        $.ajax({
+            type: 'GET',
+            url: 'findOne?Id=' + id + '',
+            success: function (data) {
+                if (data != null) {
+                    $('#ma').val(data.Id);
+                    $('#idkh').val('KH0' + data.IdKH);
+                    $('#trangthai').val(data.TrangThai);
+                }
+                $('#create_view').modal('show');
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        })
+    }
+    function delete_(id) {
+        $('#ma').val(id);
+        $('#delete_view').modal('show');
+    }
+    $('#delete').click(function () {
+        $.ajax({
+            url: 'Delete/' + $('#ma').val() + '',
+            success: function (data) {
+                if (data == false) {
+                    $(document).Toasts('create', {
+                        icon: 'fas fa-exclamation-triangle',
+                        position: 'bottomRight',
+                        class: 'bg-danger m-1',
+                        autohide: true,
+                        delay: 2000,
+                        title: 'Lỗi!',
+                        body: 'Đã có lỗi xảy ra!'
+                    });
+                }
+                else {
+                    $('#table').dataTable().api().ajax.reload();
+                    $(document).Toasts('create', {
+                        icon: 'fas fa-exclamation-triangle',
+                        position: 'bottomRight',
+                        class: 'bg-success m-1',
+                        autohide: true,
+                        delay: 2000,
+                        title: 'Notification!',
+                        body: 'Successs!'
+                    });
+                    $('#delete_view').modal('hide');
+                    location.reload();
+                }
+            }
+        })
+    })
+</script>
+
+
+
+
+
+
+
+

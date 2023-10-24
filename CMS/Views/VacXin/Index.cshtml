@@ -1,0 +1,336 @@
+﻿@{
+    ViewBag.Title = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="card">
+    <div class="card-header">
+        <div>
+            <h3 class="card-title"> Vắc xin </h3>
+        </div>
+        <div style="float:right">
+            <button class="btn btn-primary" id="create_sp">
+                Tạo mới
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <table id="dataTable" class="table table-bordered  dataTable">
+            <thead>
+                <tr class="text-center">
+                    <th style="text-align: center;width:10%">STT</th>
+                    <th style="text-align: center;width:20%">Mã </th>
+                    <th style="text-align: center;width:20%">Tên VacXin</th>
+                    <th style="text-align: center;width:20%">Giá tiền</th>
+                    <th style="text-align: center;width:20%">Số Lô</th>
+                    <th style="text-align: center;width:20%">Tiêu chuẩn</th>
+                    <th style="text-align: center;width:10%">Chức năng</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                        int index = 1;
+                        string Ma = "VS0";
+                        foreach (var item in ViewBag.result)
+                        {
+                                <tr>
+                                    <td style="text-align:center">
+                                        @index
+                                    </td>
+                                    <td style="text-align:center">
+                                        @Ma@item.Id
+                                    </td>
+                                    <td style="text-align:center">
+                                        @item.Ten
+                                    </td>
+                                    <td style="text-align:center">
+                                        @item.GiaTien VND
+                                    </td>
+                                    <td style="text-align:center">
+                                        @item.SoLo
+                                    </td>
+                                    <td style="text-align:center">
+                                        @item.TieuChuan
+                                    </td>
+                                    <td style="text-align:center">
+                                        <a id="view_" href="#" onclick="view_('@item.Id')"><i class="fas fa-eye"></i></a>
+                                        <a id="update_" href="#" onclick="update_('@item.Id')"><i class="fas fa-edit"></i></a>
+                                        <a id="delete_" href="#" onclick="delete_('@item.Id')"><i class="fas fa-trash"></i></a>
+                                    </td>
+                                </tr>
+                        index++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal CRUD -->
+<div class="modal fade" id="create_view" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Lưu mới</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="id" hidden>
+                        </div>
+                        <div class="form-group">
+                            <label for="tendl">Tên VacXin </label>
+                            <input type="text" class="form-control" id="ten">
+                        </div>
+                        <div class="form-group">
+                            <label for="diachi">Nhà cung cấp </label>
+                            <select class="form-control" id="nhacungcap">
+                                @{
+                                    foreach (var item in ViewBag.NhaCungCap)
+                                    {
+                                        <option value="@item.Id"> @item.Ten</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="chinhanh"> Giá tiền</label>
+                            <input type="number" class="form-control" id="giatien">
+                        </div>
+                        <div class="form-group">
+                            <label for="chinhanh"> Số lô</label>
+                            <input type="text" class="form-control" id="solo">
+                        </div>
+                        <div class="form-group">
+                            <label for="diachi">Tiêu chuẩn </label>
+                            <input type="text" class="form-control" id="tieuchuan">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="create">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="delete_view" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Delete</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="card-body">
+                        <h4>Bạn chắc chắn xóa hồ sơ này?</h4>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Colse</button>
+                <button type="button" class="btn btn-primary" id="delete">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="view" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Thông tin </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="card-body">
+                        <input type="text" class="form-control" id="id_view" disabled>
+                        <div class="form-group">
+                            <label for="tendl"> Tên VacXin </label>
+                            <input type="text" class="form-control" id="ten_view">
+                        </div>
+                        <div class="form-group">
+                            <label for="diachi">Nhà cung cấp </label>
+                            <select class="form-control" id="nhacungcap_view">
+                                @{
+                                    foreach (var item in ViewBag.NhaCungCap)
+                                    {
+                                        <option value="@item.Id"> @item.Ten</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="diachi">Giá tiền </label>
+                            <input type="text" class="form-control" id="giatien_view">
+                        </div>
+                        <div class="form-group">
+                            <label for="diachi"> Số lô </label>
+                            <input type="text" class="form-control" id="solo_view">
+                        </div>
+                        <div class="form-group">
+                            <label for="chinhanh"> Tiêu chuẩn </label>
+                            <input type="text" class="form-control" id="tieuchuan_view">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#create_sp").click(function () {
+        $('#id').val("");
+        $('#ten').val("");
+        $('#giatien').val("");
+        $('#nhacungcap').val();
+        $('#solo').val();
+        $('#tieuchuan').val();
+        $('#create_view').modal('show');
+    });
+    $("#create").click(function () {
+        $('#overlay').show();
+        var data =
+        {
+            Id: $('#id').val(),
+            Ten: $('#ten').val(),
+            NCCId: $('#nhacungcap').val(),
+            GiaTien: $('#giatien').val(),
+            SoLo: $('#solo').val(),
+            TieuChuan: $('#tieuchuan').val(),
+        };
+        $.ajax({
+            type: 'POST',
+            url: 'CreateOrUpdate',
+            data: data,
+            success: function (response) {
+                if (response == false) {
+                    $(document).Toasts('create', {
+                        icon: 'fas fa-exclamation-triangle',
+                        position: 'bottomRight',
+                        class: 'bg-danger m-1',
+                        autohide: true,
+                        delay: 2000,
+                        title: 'Lỗi!',
+                        body: 'Đã có lỗi xảy ra!'
+                    });
+                }
+                else {
+                    $(document).Toasts('create', {
+                        icon: 'fas fa-exclamation-triangle',
+                        position: 'bottomRight',
+                        class: 'bg-success m-1',
+                        autohide: true,
+                        title: 'Notification!',
+                        body: 'Successs!'
+                    });
+                    $('#create_view').modal('hide');
+                    location.reload();
+                }
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        })
+    });
+    function update_(id) {
+        $.ajax({
+            type: 'GET',
+            url: 'findOne?Id=' + id + '',
+            success: function (data) {
+                if (data != null) {
+                    $('#id').val(data.Id);
+                    $('#ten').val(data.Ten);
+                    $('#giatien').val(data.GiaTien);
+                    $('#nhacungcap').val(data.NCCId);
+                    $('#solo').val(data.SoLo);
+                    $('#tieuchuan').val(data.TieuChuan);
+                }
+                $('#create_view').modal('show');
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        })
+    }
+    function delete_(id) {
+        $('#id').val(id);
+        $('#delete_view').modal('show');
+    }
+    $('#delete').click(function () {
+        $.ajax({
+            url: 'Delete/' + $('#id').val() + '',
+            success: function (data) {
+                if (data == false) {
+                    $(document).Toasts('create', {
+                        icon: 'fas fa-exclamation-triangle',
+                        position: 'bottomRight',
+                        class: 'bg-danger m-1',
+                        autohide: true,
+                        delay: 2000,
+                        title: 'Lỗi!',
+                        body: 'Đã có lỗi xảy ra!'
+                    });
+                }
+                else {
+                    $('#table').dataTable().api().ajax.reload();
+                    $(document).Toasts('create', {
+                        icon: 'fas fa-exclamation-triangle',
+                        position: 'bottomRight',
+                        class: 'bg-success m-1',
+                        autohide: true,
+                        delay: 2000,
+                        title: 'Notification!',
+                        body: 'Successs!'
+                    });
+                    $('#delete_view').modal('hide');
+                    location.reload();
+                }
+            }
+        })
+    })
+    function view_(id) {
+        $.ajax({
+            type: 'GET',
+            url: 'findOne?Id=' + id + '',
+            success: function (data) {
+                if (data != null) {
+                    $('#id_view').val(data.Id);
+                    $('#ten_view').val(data.Ten);
+                    $('#nhacungcap_view').val(data.NCCId);
+                    $('#giatien_view').val(data.GiaTien);
+                    $('#solo_view').val(data.SoLo);
+                    $('#tieuchuan_view').val(data.TieuChuan);
+                }
+                $('#view').modal('show');
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        })
+    }
+</script>
+
+
+
+
+
+
+
+
+

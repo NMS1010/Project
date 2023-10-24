@@ -1,0 +1,77 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+@{
+    ViewBag.Title = "Login";
+    Layout = null;
+}
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Log in</title>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/Content/plugins/fontawesome-free/css/all.min.css">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="/Content/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/Content/dist/css/adminlte.min.css">
+</head>
+<body class="hold-transition login-page">
+    <div class="login-box">
+        <div class="login-logo">
+            <b>Quản lý tiêm chủng</b>
+        </div>
+        <!-- /.login-logo -->
+        <div class="card">
+            <div class="card-body login-card-body">
+                <p class="login-box-msg"> Đăng nhập</p>
+                @using (Html.BeginForm("Index", "Login", FormMethod.Post))
+                {
+                    <div class="input-group mb-3">
+                        <input name="username" type="text" class="form-control" placeholder="Tài khoản...">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-envelope"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input name="password" type="password" class="form-control" placeholder="Mật khẩu..">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                            <select name="type" class="form-control">
+                                <option value="1">Quản lý </option>
+                                <option value="2">Nhân viên</option>
+                            </select>
+                    </div>
+                    <div class="row">
+                        <button type="submit" class="btn btn-primary btn-block">Đăng nhập</button>
+                    </div>
+                    <div class="row">
+                        @if (ViewBag.Error != null)
+                        {
+                            <h6 style="color:red">@ViewBag.Error</h6>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <!-- /.login-box -->
+    <!-- jQuery -->
+    <script src="/Content/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="/Content/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="/Content/dist/js/adminlte.min.js"></script>
+</body>
+</html>
+

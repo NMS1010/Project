@@ -1,0 +1,332 @@
+﻿@model List<CMS.Models.NhanVien>
+    @{
+        ViewBag.Title = "";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <h3 class="card-title"> Nhân viên </h3>
+            </div>
+            <div style="float:right">
+                <button class="btn btn-primary" id="create_sp">
+                    Tạo mới
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <table id="dataTable" class="table table-bordered  dataTable">
+                <thead>
+                    <tr class="text-center">
+                        <th style="text-align: center; width: 5%"> STT </th>
+                        <th style="text-align: center; width: 5%"> Mã </th>
+                        <th style="text-align: center; width: 15%">Tên nhân viên </th>
+                        <th style="text-align: center; width: 15%">Địa chỉ </th>
+                        <th style="text-align: center; width: 15%">Số điện thoại </th>
+                        <th style="text-align: center; width: 15%">Tài khoản</th>
+                        <th style="text-align: center; width: 15%">Mật khẩu</th>
+                        <th style="text-align: center">Chức năng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Count() > 0)
+                    {
+                        int index = 1;
+                        string Ma = "NV0";
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td style="text-align:center">
+                                    @index
+                                </td>
+                                <td style="text-align:center">
+                                    @Ma@item.Id
+                                </td>
+                                <td style="text-align:center">
+                                    @item.Ten
+                                </td>
+                                <td style="text-align:center">
+                                    @item.DiaChi
+                                </td>
+                                <td style="text-align:center">
+                                    @item.SoDT
+                                </td>
+                                <td style="text-align:center">
+                                    @item.TaiKhoan
+                                </td>
+                                <td style="text-align:center">
+                                    @item.MatKhau
+                                </td>
+                                <td style="text-align:center">
+                                    <a id="view_" href="#" onclick="view_('@item.Id')"><i class="fas fa-eye"></i></a>
+                                    <a id="update_" href="#" onclick="update_('@item.Id')"><i class="fas fa-edit"></i></a>
+                                    <a id="delete_" href="#" onclick="delete_('@item.Id')"><i class="fas fa-trash"></i></a>
+                                </td>
+                            </tr>
+                            index++;
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal CRUD -->
+    <div class="modal fade" id="create_view" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Lưu mới</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="ma" hidden>
+                            </div>
+                            <div class="form-group">
+                                <label for="tendl">Tên nhân viên </label>
+                                <input type="text" class="form-control" id="ten">
+                            </div>
+                            <div class="form-group">
+                                <label for="diachi">Địa chỉ </label>
+                                <input type="text" class="form-control" id="diachi">
+                            </div>
+                            <div class="form-group">
+                                <label for="chinhanh">Số điện thoại </label>
+                                <input type="number" class="form-control" id="sodt">
+                            </div>
+                            <div class="form-group">
+                                <label for="diachi">Tài khoản </label>
+                                <input type="text" class="form-control" id="taikhoan">
+                            </div>
+                            <div class="form-group">
+                                <label for="chinhanh">Mật khẩu </label>
+                                <input type="text" class="form-control" id="matkhau">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="create">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="delete_view" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Delete</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="card-body">
+                            <h4>Bạn chắc chắn xóa hồ sơ này?</h4>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Colse</button>
+                    <button type="button" class="btn btn-primary" id="delete">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="view" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Thông tin </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="card-body">
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="ma_view" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="tendl">Tên nhân viên </label>
+                                    <input type="text" class="form-control" id="ten_view">
+                                </div>
+                                <div class="form-group">
+                                    <label for="diachi">Địa chỉ </label>
+                                    <input type="text" class="form-control" id="diachi_view">
+                                </div>
+                                <div class="form-group">
+                                    <label for="chinhanh">Số điện thoại </label>
+                                    <input type="number" class="form-control" id="sodt_view">
+                                </div>
+                                <div class="form-group">
+                                    <label for="diachi">Tài khoản </label>
+                                    <input type="text" class="form-control" id="taikhoan_view">
+                                </div>
+                                <div class="form-group">
+                                    <label for="chinhanh">Mật khẩu </label>
+                                    <input type="text" class="form-control" id="matkhau_view">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $("#create_sp").click(function () {
+            //$('#makh').val("");
+            //$('#cmnd').val("");
+            //$('#tendangnhap').val();
+            //$('#matkhau').val();
+            //$('#sdt').val();
+            //$('#quequan').val();
+            $('#create_view').modal('show');
+        });
+        $("#create").click(function () {
+            $('#overlay').show();
+            var data =
+            {
+                Id: $('#ma').val(),
+                Ten: $('#ten').val(),
+                DiaChi: $('#diachi').val(),
+                SoDT: $('#sodt').val(),
+                TaiKhoan: $('#taikhoan').val(),
+                MatKhau: $('#matkhau').val(),
+            };
+            $.ajax({
+                type: 'POST',
+                url: 'CreateOrUpdate',
+                data: data,
+                success: function (response) {
+                    if (response == false) {
+                        $(document).Toasts('create', {
+                            icon: 'fas fa-exclamation-triangle',
+                            position: 'bottomRight',
+                            class: 'bg-danger m-1',
+                            autohide: true,
+                            delay: 2000,
+                            title: 'Lỗi!',
+                            body: 'Đã có lỗi xảy ra!'
+                        });
+                    }
+                    else {
+                        $(document).Toasts('create', {
+                            icon: 'fas fa-exclamation-triangle',
+                            position: 'bottomRight',
+                            class: 'bg-success m-1',
+                            autohide: true,
+                            title: 'Notification!',
+                            body: 'Successs!'
+                        });
+                        $('#create_view').modal('hide');
+                        location.reload();
+                    }
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            })
+        });
+        function update_(id) {
+            $.ajax({
+                type: 'GET',
+                url: 'findOne?Id=' + id + '',
+                success: function (data) {
+                    if (data != null) {
+                        $('#ma').val(data.Id);
+                        $('#ten').val(data.Ten);
+                        $('#diachi').val(data.DiaChi);
+                        $('#taikhoan').val(data.TaiKhoan);
+                        $('#matkhau').val(data.MatKhau);
+                        $('#sodt').val(data.SoDT);
+                    }
+                    $('#create_view').modal('show');
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            })
+        }
+        function delete_(id) {
+            $('#ma').val(id);
+            $('#delete_view').modal('show');
+        }
+        $('#delete').click(function () {
+            $.ajax({
+                url: 'Delete/' + $('#ma').val() + '',
+                success: function (data) {
+                    if (data == false) {
+                        $(document).Toasts('create', {
+                            icon: 'fas fa-exclamation-triangle',
+                            position: 'bottomRight',
+                            class: 'bg-danger m-1',
+                            autohide: true,
+                            delay: 2000,
+                            title: 'Lỗi!',
+                            body: 'Đã có lỗi xảy ra!'
+                        });
+                    }
+                    else {
+                        $('#table').dataTable().api().ajax.reload();
+                        $(document).Toasts('create', {
+                            icon: 'fas fa-exclamation-triangle',
+                            position: 'bottomRight',
+                            class: 'bg-success m-1',
+                            autohide: true,
+                            delay: 2000,
+                            title: 'Notification!',
+                            body: 'Successs!'
+                        });
+                        $('#delete_view').modal('hide');
+                        location.reload();
+                    }
+                }
+            })
+        })
+        function view_(id) {
+            $.ajax({
+                type: 'GET',
+                url: 'findOne?Id=' + id + '',
+                success: function (data) {
+                    if (data != null) {
+                        $('#ma_view').val(data.Id);
+                        $('#ten_view').val(data.Ten);
+                        $('#diachi_view').val(data.DiaChi);
+                        $('#taikhoan_view').val(data.TaiKhoan);
+                        $('#matkhau_view').val(data.MatKhau);
+                        $('#sodt_view').val(data.SoDT);
+                    }
+                    $('#view').modal('show');
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            })
+        }
+    </script>
+
+
+
+
+
+
+
+
+

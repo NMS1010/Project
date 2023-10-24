@@ -1,0 +1,66 @@
+﻿@{
+    ViewBag.Title = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="card">
+    <div class="card-header">
+        <div>
+            <h3 class="card-title"> Liên hệ của bạn : </h3>
+        </div>
+    </div>
+    <div class="card-body">
+        <table id="dataTable" class="table table-bordered  dataTable">
+            <thead>
+                <tr class="text-center">
+                    <th style="text-align: center; width: 5%">STT</th>
+                    <th style="text-align: center; width: 15%">Tên khách hàng </th>
+                    <th style="text-align: center; width: 15%">Email </th>
+                    <th style="text-align: center; width: 15%">Số điện thoại</th>
+                    <th style="text-align: center; width: 15%">Tiêu đề</th>
+                    <th style="text-align: center; width: 15%">Nội dung</th>
+                    <th style="text-align: center; width: 15%">Ngày gửi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int index = 1;
+                    foreach (var item in ViewBag.result)
+                    {
+                        <tr>
+                            <td style="text-align:center">
+                                @index
+                            </td>
+                            <td style="text-align:center">
+                                @item.TenKH
+                            </td>
+                            <td style="text-align:center">
+                                @item.Email
+                            </td>
+                            <td style="text-align:center">
+                                @item.SoDT
+                            </td>
+                            <td style="text-align:center">
+                                @item.TieuDe
+                            </td>
+                            <td style="text-align:center">
+                                @item.NoiDung
+                            </td>
+                            <td style="text-align:center">
+                                @item.NgayGui.ToString("dd/MM/yyyy")
+                            </td>
+                        </tr>
+                        index++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+
+
+
+

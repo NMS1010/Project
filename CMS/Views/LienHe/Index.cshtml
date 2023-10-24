@@ -1,0 +1,166 @@
+﻿@{
+    ViewBag.Title = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="card">
+    <div class="card-header">
+        <div>
+            <h3 class="card-title"> Liên hệ</h3>
+        </div>
+    </div>
+    <div class="card-body">
+        <table id="dataTable" class="table table-bordered  dataTable">
+            <thead>
+                <tr class="text-center">
+                    <th style="text-align: center; width: 5%">STT</th>
+                    <th style="text-align: center; width: 10%">Tên khách hàng </th>
+                    <th style="text-align: center; width: 10%">Email </th>
+                    <th style="text-align: center; width: 10%">Số điện thoại</th>
+                    <th style="text-align: center; width: 10%">Tiêu đề</th>
+                    <th style="text-align: center; width: 25%">Nội dung</th>
+                    <th style="text-align: center; width: 10%">Ngày gửi</th>
+                    <th style="text-align: center; width: 25%">Nhân viên liên hệ</th>
+                    <th style="text-align: center; width: 5%">Phân công</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int index = 1;
+                    foreach (var item in ViewBag.result)
+                    {
+                        <tr>
+                            <td style="text-align:center">
+                                @index
+                            </td>
+                            <td style="text-align:center">
+                                @item.TenKH
+                            </td>
+                            <td style="text-align:center">
+                                @item.Email
+                            </td>
+                            <td style="text-align:center">
+                                @item.SoDT
+                            </td>
+                            <td style="text-align:center">
+                                @item.TieuDe
+                            </td>
+                            <td style="text-align:center">
+                                @item.NoiDung
+                            </td>
+                            <td style="text-align:center">
+                                @item.NgayGui.ToString("dd/MM/yyyy")
+                            </td>
+                            <td style="text-align:center">
+                                @item.TenNhanVien
+                            </td>
+                            <td style="text-align:center">
+                                <a id="update_" href="#" onclick="update_('@item.Id')"><i class="fas fa-edit"></i></a>
+                            </td>
+                        </tr>
+                        index++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- Modal CRUD -->
+<div class="modal fade" id="create_view" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Liên hệ </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="chinhanh"> Phân công nhân viên </label>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="ma" hidden>
+                            </div>
+                            <select class="form-control" id="trangthai">
+                                @foreach (var item in ViewBag.NhanVien)
+                                {
+                                    <option value="@item.Id"> @item.Ten</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="create">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $("#create").click(function () {
+        var data =
+        {
+            Id: $('#ma').val(),
+            NhanVienId: $('#trangthai').val(),
+        };
+        $.ajax({
+            type: 'GET',
+            url: 'PhanCong',
+            data: data,
+            success: function (response) {
+                if (response == false) {
+                    $(document).Toasts('create', {
+                        icon: 'fas fa-exclamation-triangle',
+                        position: 'bottomRight',
+                        class: 'bg-danger m-1',
+                        autohide: true,
+                        delay: 2000,
+                        title: 'Lỗi!',
+                        body: 'Đã có lỗi xảy ra!'
+                    });
+                }
+                else {
+                    $(document).Toasts('create', {
+                        icon: 'fas fa-exclamation-triangle',
+                        position: 'bottomRight',
+                        class: 'bg-success m-1',
+                        autohide: true,
+                        title: 'Notification!',
+                        body: 'Successs!'
+                    });
+                    $('#create_view').modal('hide');
+                    location.reload();
+                }
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        })
+    });
+    function update_(id) {
+        $.ajax({
+            type: 'GET',
+            url: 'findOne?Id=' + id + '',
+            success: function (data) {
+                if (data != null) {
+                    $('#ma').val(data.Id);
+                    $('#trangthai').val(data.NhanVienId);
+                }
+                $('#create_view').modal('show');
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        })
+    }
+</script>
+
+
+
+
+
+
