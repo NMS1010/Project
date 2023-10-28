@@ -17,6 +17,8 @@ namespace CMS.Models
         [StringLength(50)]
         public string DiaChi { get; set; }
 
+        public string GioiTinh { get; set; }
+
         public int? SoDT { get; set; }
 
         [StringLength(50)]

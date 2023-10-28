@@ -1,0 +1,526 @@
+﻿f
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Bệnh viện tiêm chủng </title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="CareMed demo project">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/Content/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Src/styles/bootstrap4/bootstrap.min.css">
+    <link href="plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="~/Src/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
+    <link rel="stylesheet" type="text/css" href="~/Src/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
+    <link rel="stylesheet" type="text/css" href="~/Src/plugins/OwlCarousel2-2.2.1/animate.css">
+    <link rel="stylesheet" type="text/css" href="~/Src/styles/main_styles.css">
+    <link rel="stylesheet" type="text/css" href="~/Src/styles/responsive.css">
+    <link rel="stylesheet" type="text/css" href="~/Src/styles/about.css">
+    <link rel="stylesheet" type="text/css" href="~/Src/styles/about_responsive.css">
+    <script src="/Content/plugins/jquery/jquery.min.js"></script>
+
+    <style>
+        #overlay {
+            height: 100%;
+            width: 100%;
+            position: fixed;
+            z-index: 99999;
+            background-color: rgba(255,255,255,0.7);
+            filter: alpha(opacity=75);
+            opacity: 0.75;
+            display: none;
+            cursor: wait;
+        }
+
+            #overlay i {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="super_container">
+        <!-- Header -->
+
+        <header class="header trans_200">
+            <!-- Top Bar -->
+            <div class="top_bar">
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <div class="top_bar_content d-flex flex-row align-items-center justify-content-start">
+                                <div class="top_bar_item"><h3 style="color:red">VNVC</h3></div>
+                                <div class="top_bar_item"><h3 style="color:red">Hệ thống tiêm chủng</h3></div>
+                                <div class="emergencies  d-flex flex-row align-items-center justify-content-start ml-auto">Liên hệ : + 024 47558 623</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Header Content -->
+            <div class="header_container">
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <div class="header_content d-flex flex-row align-items-center justify-content-start">
+                                <nav class="main_nav ml-auto">
+                                    <ul>
+                                        <li><a href="#">Trang Chủ</a></li>
+                                        <li><a href="~/Home/Contact">Liên Hệ</a></li>
+                                        @{
+                                            var kh = Session["KhachHang"] as CMS.Models.KhachHang;
+                                            if (kh == null)
+                                            {
+                                                <li><a href="~/Login">Đăng nhập</a></li>
+                                                <li><a href="~/DangKy">Đăng ký</a></li>
+                                            }
+                                            else
+                                            {
+                                                <li><a href="~/">Lịch tiêm</a></li>
+                                                <li>Xin chào, @kh.Ten</li>
+                                                <li><a href="~/Login/DangXuat">Đăng xuất</a></li>
+                                            }
+                                        }
+                                    </ul>
+                                </nav>
+                                <div class="hamburger ml-auto"><i class="fa fa-bars" aria-hidden="true"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Menu -->
+        <div class="menu_container menu_mm">
+            <div class="menu_close_container">
+                <div class="menu_close"></div>
+            </div>
+            <div class="menu_inner menu_mm">
+                <div class="menu menu_mm">
+                    <ul class="menu_list menu_mm">
+                        <li><a href="#">Trang Chủ</a></li>
+                        <li><a href="~/Home/Contact">Liên Hệ</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div style="margin-top: 130px !important;">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Lịch tiêm của bạn</h2>
+                        <button class="btn btn-primary" id="create_sp">
+                            Đặt lịch tiêm
+                        </button>
+                </div>
+                <div class="card-body">
+                    <table id="dataTable" class="table table-bordered  dataTable" style="width: 100%;">
+                        <thead>
+                            <tr class="text-center">
+                                <th style="text-align: center; width: 5%">STT</th>
+                                <th style="text-align: center; width: 5%">Mã </th>
+                                <th style="text-align: center; width: 18%">Địa điểm tiêm</th>
+                                <th style="text-align: center; width: 18%">Ngày tiêm</th>
+                                <th style="text-align: center; width: 18%">Trạng thái</th>
+                                <th style="text-align: center; width: 18%">Tên Vacxin</th>
+                                <th style="text-align: center; width: 18%">Chức năng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int index = 1;
+                                string Ma = "LT0";
+                                foreach (var item in (dynamic)ViewData["Result"])
+                                {
+                                    <tr>
+                                        <td style="text-align:center">
+                                            @index
+                                        </td>
+                                        <td style="text-align:center">
+                                            @Ma@item.Id
+                                        </td>
+                                        <td style="text-align:center">
+                                            @item.DiaDiemTiem
+                                        </td>
+                                        <td style="text-align:center">
+                                            @item.NgayTiem.ToString()
+                                        </td>
+                                        <td style="text-align:center">
+                                            @{
+                                                var trangThai = "";
+                                                switch (item.TrangThai)
+                                                {
+                                                    case 0:
+                                                        trangThai = "Từ chối";
+                                                        break;
+                                                    case 1:
+                                                        trangThai = "Chấp nhận";
+                                                        break;
+                                                    case 2:
+                                                        trangThai = "Đã tiêm";
+                                                        break;
+                                                    case 3:
+                                                        trangThai = "Đã chờ sau tiêm";
+                                                        break;
+                                                    default:
+                                                        trangThai = "Chưa phê duyệt";
+                                                        break;
+                                                }
+                                            }
+                                            @trangThai
+                                        </td>
+                                        <td style="text-align:center">
+                                            @item.TenVacxin
+                                        </td>
+                                        <td style="text-align:center">
+                                            <a id="view_" href="#" onclick="view_('@item.Id')"><i class="fas fa-eye"></i></a>
+                                        </td>
+                                    </tr>
+                                    index++;
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Modal CRUD -->
+            <div class="modal fade" id="create_view" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Lưu mới</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <h3 class="text-center">Phiếu khảo sát sức khoẻ</h3>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="ten">Tên bệnh nhân</label>
+                                        <input type="text" class="form-control" id="ten">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="diachi">Địa chỉ </label>
+                                        <input type="text" class="form-control" id="diachi">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sodt">Số điện thoại</label>
+                                        <input type="number" class="form-control" id="sodt">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ngaysinh"> Ngày sinh </label>
+                                        <input type="date" class="form-control datepicker-days" id="ngaysinh">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="gioitinh">Giới tính</label>
+                                        <select class="form-control" id="gioitinh">
+                                            <option value="Nam">Nam</option>
+                                            <option value="Nữ">Nữ</option>
+                                            <option value="Khác">Khác</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="chieucao">Chiều cao (cm) </label>
+                                        <input type="number" step="0.01" class="form-control" id="chieucao">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cannang">Cân nặng (kg)</label>
+                                        <input type="number" step="0.01" class="form-control" id="cannang">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="diung">Dị ứng </label>
+                                        <textarea class="form-control" id="diung"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="benhhientai">Các bệnh hiện tại </label>
+                                        <textarea class="form-control" id="benhhientai"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="mangthai">Bạn có đang mang thai ?</label>
+                                        <select class="form-control" id="mangthai">
+                                            <option value="true">Có</option>
+                                            <option value="false">Không</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="dieutribenh">Bạn có đang trong quá trình điều trị bệnh ? </label>
+                                        <select class="form-control" id="dieutribenh">
+                                            <option value="true">Có</option>
+                                            <option value="false">Không</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                            <form>
+                                <h3 class="text-center">Lịch tiêm vacxin</h3>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="ngaytiem"> Ngày tiêm </label>
+                                        <input type="datetime-local" class="form-control datepicker-days" id="ngaytiem">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="vacxin">Chọn loại vacxin</label>
+                                        <select class="form-control" id="vacxin">
+                                            @foreach (var item in (dynamic)ViewData["Vacxin"])
+                                            {
+                                                <option value="@item.Id">@item.Ten</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" id="create">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="view" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Thông tin </h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="ten_view">Tên bệnh nhân</label>
+                                        <input readonly type="text" class="form-control" id="ten_view">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="diachi_view">Địa chỉ </label>
+                                        <input readonly type="text" class="form-control" id="diachi_view">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sodt_view">Số điện thoại</label>
+                                        <input readonly type="number" class="form-control" id="sodt_view">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ngaysinh_view"> Ngày sinh </label>
+                                        <input readonly type="date" class="form-control datepicker-days" id="ngaysinh_view">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="gioitinh_view">Giới tính</label>
+                                        <input readonly type="text" class="form-control" id="gioitinh_view">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="chieucao_view">Chiều cao (cm) </label>
+                                        <input readonly type="number" step="0.01" class="form-control" id="chieucao_view">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cannang_view">Cân nặng (kg)</label>
+                                        <input readonly type="number" step="0.01" class="form-control" id="cannang_view">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="diung_view">Dị ứng </label>
+                                        <textarea readonly class="form-control" id="diung_view"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="benhhientai_view">Các bệnh hiện tại </label>
+                                        <textarea readonly class="form-control" id="benhhientai_view"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="mangthai_view">Bạn có đang mang thai ?</label>
+                                        <input readonly type="text" class="form-control" id="mangthai_view">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="dieutribenh_view">Bạn có đang trong quá trình điều trị bệnh ? </label>
+                                        <input readonly type="text" class="form-control" id="dieutribenh_view">
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="text-center"><img style="width: 160px;" src="" id="qr_code" /></div>
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                $("#create_sp").click(function () {
+                    $('#create_view').modal('show');
+                });
+                $("#create").click(function () {
+                    $('#overlay').show();
+                    var data =
+                    {
+                        vacxin: $('#vacxin').val(),
+                        diadiem: $('#diadiem').val(),
+                        ngaytiem: $('#ngaytiem').val(),
+                        ten: $('#ten').val(),
+                        diachi: $('#diachi').val(),
+                        sodt: $('#sodt').val(),
+                        ngaysinh: $('#ngaysinh').val(),
+                        gioitinh: $('#gioitinh').val(),
+                        chieucao: $('#chieucao').val(),
+                        cannang: $('#cannang').val(),
+                        diung: $('#diung').val(),
+                        benhhientai: $('#benhhientai').val(),
+                        mangthai: $('#mangthai').val(),
+                        dieutri: $('#dieutribenh').val(),
+                    };
+                    $.ajax({
+                        type: 'POST',
+                        url: '/DatLichTiem',
+                        data: data,
+                        success: function (response) {
+                            if (response == false) {
+                                $(document).Toasts('create', {
+                                    icon: 'fas fa-exclamation-triangle',
+                                    position: 'bottomRight',
+                                    class: 'bg-danger m-1',
+                                    autohide: true,
+                                    delay: 2000,
+                                    title: 'Lỗi!',
+                                    body: 'Đã có lỗi xảy ra!'
+                                });
+                            }
+                            else {
+                                $(document).Toasts('create', {
+                                    icon: 'fas fa-exclamation-triangle',
+                                    position: 'bottomRight',
+                                    class: 'bg-success m-1',
+                                    autohide: true,
+                                    title: 'Notification!',
+                                    body: 'Successs!'
+                                });
+                                $('#create_view').modal('hide');
+                                location.reload();
+                            }
+                        },
+                        error: function (data) {
+                            console.log(data);
+                        }
+                    })
+                });
+                function formatDate(date = new Date()) {
+                    const year = date.toLocaleString('default', { year: 'numeric' });
+                    const month = date.toLocaleString('default', {
+                        month: '2-digit',
+                    });
+                    const day = date.toLocaleString('default', { day: '2-digit' });
+
+                    return [year, month, day].join('-');
+                }
+                function view_(id) {
+                    $.ajax({
+                        type: 'GET',
+                        url: '/DatLichTiem/getOne?Id=' + id + '',
+                        success: function (dt) {
+                            let data = dt.phieuSucKhoe
+                            if (data != null) {
+                                $("#qr_code").attr("src", dt.qrCode);
+                                $('#ten_view').val(data.TenBenhNhan);
+                                $('#diachi_view').val(data.DiaChi);
+                                $('#sodt_view').val(data.SoDienThoai);
+                                let date = new Date(parseInt(data.NgaySinh.replace('/Date(', '').replace(')/', '')))
+                                dob = formatDate(date);
+                                $('#ngaysinh_view').val(dob);
+                                $('#gioitinh_view').val(data.GioiTinh);
+                                $('#chieucao_view').val(data.ChieuCao);
+                                $('#cannang_view').val(data.CanNang);
+                                $('#diung_view').val(data.DiUng);
+                                $('#benhhientai_view').val(data.BenhHienTai);
+                                $('#mangthai_view').val(data.DangMangThai ? 'Có' : 'Không');
+                                $('#dieutribenh_view').val(data.DangDieuTriBenh ? 'Có' : 'Không');
+                            }
+                            $('#view').modal('show');
+                        },
+                        error: function (data) {
+                            console.log(data);
+                        }
+                    })
+                }
+            </script>
+        </div>
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer_container">
+                <div class="container">
+                    <div class="row">
+
+                        <!-- Footer - About -->
+                        <div class="col-lg-4 footer_col">
+                            <div class="footer_about">
+                                <ul class="footer_about_list">
+                                    <li><div class="footer_about_icon"><img src="images/phone-call.svg" alt=""></div><span>Số điện thoại : + 024 47558 623</span></li>
+                                    <li><div class="footer_about_icon"><img src="images/envelope.svg" alt=""></div><span>Email : vnvc@gmail.com</span></li>
+                                    <li><div class="footer_about_icon"><img src="images/placeholder.svg" alt=""></div><span>Address: B3 - Xã Đàn - Đống Đa - Hà Nội</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- jQuery -->
+    <script src="/Content/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="/Content/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
+    <script src="/Content/plugins/select2/js/select2.full.min.js"></script>
+    <script src="~/Content/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="/Scripts/adminlte.js"></script>
+
+    <!-- PAGE PLUGINS -->
+    <!-- jQuery Mapael -->
+    <script src="/Content/plugins/jquery-mousewheel/jquery.mousewheel.js"></script>
+    <script src="/Content/plugins/raphael/raphael.min.js"></script>
+    <script src="/Content/plugins/jquery-mapael/jquery.mapael.min.js"></script>
+    <script src="/Content/plugins/jquery-mapael/maps/usa_states.min.js"></script>
+    <!-- ChartJS -->
+    <script src="/Content/plugins/chart.js/Chart.min.js"></script>
+    <script src="/Content/plugins/sparklines/sparkline.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <!-- AdminLTE App -->
+    <script src="/Scripts/demo.js"></script>
+    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+    @*<script src="/Scripts/pages/dashboard2.js"></script>*@
+    @*<script href="/scripts/config.js"></script>*@
+
+    <!-- daterangepicker -->
+    <script src="/Content/plugins/moment/moment.min.js"></script>
+    <script src="/Content/plugins/daterangepicker/daterangepicker.js"></script>
+    <!-- Tempusdominus Bootstrap 4 -->
+    <script src="/Content/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+    <!-- Summernote -->
+    <script src="/Content/plugins/summernote/summernote-bs4.min.js"></script>
+    <!-- overlayScrollbars -->
+    <script src="/Content/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+
+    <!-- DataTables -->
+    <script type="text/javascript" src="/Content/plugins/datatables/jquery.dataTables.js"></script>
+    <script type="text/javascript" src="/Content/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script type="text/javascript" src="/Content/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script type="text/javascript" src="/Content/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#dataTable').DataTable(
+                {
+                    "scrollY": 500,
+                    "scrollX": true
+                }
+            );
+        });
+    </script>
+</body>
+</html>

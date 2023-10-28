@@ -30,7 +30,7 @@ namespace CMS.Models
         [StringLength(50)]
         public string CCCD { get; set; }
 
-        [StringLength(50)]
+        [StringLength(1000)]
         public string MatKhau { get; set; }
 
         [NotMapped]

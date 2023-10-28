@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+@{
+    ViewBag.Title = "Đăng ký";
+    Layout = null;
+}
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Đăng ký</title>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/Content/plugins/fontawesome-free/css/all.min.css">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="/Content/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/Content/dist/css/adminlte.min.css">
+</head>
+<body class="hold-transition login-page">
+    <div class="login-box">
+        <div class="login-logo">
+            <b>Quản lý tiêm chủng</b>
+        </div>
+        <!-- /.login-logo -->
+        @{
+            var model = ViewBag.KhachHang as CMS.Models.KhachHang;
+            if (model == null)
+            {
+                model = new CMS.Models.KhachHang();
+            }
+        }
+        <div class="card">
+            <div class="card-body login-card-body">
+                <p class="login-box-msg"> Đăng ký</p>
+                @using (Html.BeginForm("Index", "DangKy", FormMethod.Post))
+                {
+                    <div class="input-group mb-3">
+                        <input name="SoDT" type="text" class="form-control" value="@(model.SoDT)" placeholder="Số điện thoại...">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fa fa-phone"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input name="matkhau" type="password" class="form-control" placeholder="Mật khẩu..">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input name="ten" type="text" class="form-control" value="@(model.Ten)" placeholder="Họ và tên...">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fa fa-address-book"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input name="DiaChi" type="text" class="form-control" value="@(model.DiaChi)" placeholder="Địa chỉ...">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fa fa-location-arrow"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input name="email" type="text" class="form-control" value="@(model.Email)" placeholder="Email...">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-envelope"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input name="ngaysinh" type="date" class="form-control">
+                    </div>
+                    <div class="input-group mb-3">
+                        <input name="gioitinh" type="text" class="form-control" value="@(model.GioiTinh)" placeholder="Giới tính...">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fa fa-mars-stroke"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input name="cccd" type="text" class="form-control" value="@(model.CCCD)" placeholder="Căn cước công dân...">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fa fa-id-card"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <button type="submit" class="btn btn-primary btn-block">Đăng ký</button>
+                    </div>
+                    <div class="row">
+                        @if (ViewBag.Error != null)
+                        {
+                            <h6 style="color:red">@ViewBag.Error</h6>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <!-- /.login-box -->
+    <!-- jQuery -->
+    <script src="/Content/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="/Content/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="/Content/dist/js/adminlte.min.js"></script>
+</body>
+</html>

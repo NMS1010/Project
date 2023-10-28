@@ -1,4 +1,5 @@
-﻿f<!DOCTYPE html>
+﻿f
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <title>Bệnh viện tiêm chủng </title>
@@ -32,7 +33,6 @@
                                 <div class="top_bar_item"><h3 style="color:red">Hệ thống tiêm chủng</h3></div>
                                 <div class="emergencies  d-flex flex-row align-items-center justify-content-start ml-auto">Liên hệ : + 024 47558 623</div>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -47,6 +47,20 @@
                                     <ul>
                                         <li><a href="#">Trang Chủ</a></li>
                                         <li><a href="~/Home/Contact">Liên Hệ</a></li>
+                                        @{
+                                            var kh = Session["KhachHang"] as CMS.Models.KhachHang;
+                                            if (kh == null)
+                                            {
+                                                <li><a href="~/Login">Đăng nhập</a></li>
+                                                <li><a href="~/DangKy">Đăng ký</a></li>
+                                            }
+                                            else
+                                            {
+                                                <li><a href="~/DatLichTiem">Lịch tiêm</a></li>
+                                                <li>Xin chào, @kh.Ten</li>
+                                                <li><a href="~/Login/DangXuat">Đăng xuất</a></li>
+                                            }
+                                        }
                                     </ul>
                                 </nav>
                                 <div class="hamburger ml-auto"><i class="fa fa-bars" aria-hidden="true"></i></div>
@@ -147,7 +161,6 @@
             </div>
         </div>
 
-
         <!-- About add -->
         <div class="about">
             <div class="container">
@@ -191,7 +204,7 @@
         <div>
             <div class="card">
                 <div class="card-header">
-                        <h2> Bảng giá</h2>
+                    <h2> Bảng giá</h2>
                 </div>
                 <div class="card-body">
                     <table id="dataTable" class="table table-bordered  dataTable">
@@ -221,13 +234,11 @@
                                     </td>
                                 </tr>
                             }
-
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-
 
         <!-- Testimonials -->
         <div class="testimonials">
@@ -259,7 +270,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -309,7 +319,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

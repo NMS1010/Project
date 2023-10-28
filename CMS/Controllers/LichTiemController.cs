@@ -16,17 +16,25 @@ namespace CMS.Controllers
         public ActionResult Index()
         {
             var result = _db.LichTiems.ToList();
+            if (Session["Menu"] == "bacsi")
+            {
+                var id = int.Parse(Session["BacSi"].ToString());
+                result = _db.LichTiems.Where(x => x.IdBacSi == id).ToList();
+            }
+            ViewBag.Bacsi = _db.NhanViens.Where(x => x.Quyen.Contains("BacSi")).ToList();
             ViewBag.Result = result;
             return View();
         }
 
         [HttpGet]
-        public Boolean CreateOrUpdate(int Id,int TrangThai)
+        public Boolean CreateOrUpdate(int Id, int TrangThai, int IdBacSi, string DiaDiemTiem)
         {
             try
             {
                 var result = _db.LichTiems.Find(Id);
-                result.TrangThai = TrangThai; 
+                result.TrangThai = TrangThai;
+                result.DiaDiemTiem = DiaDiemTiem;
+                result.IdBacSi = IdBacSi;
                 _db.LichTiems.AddOrUpdate(result);
                 _db.SaveChanges();
                 return true;
@@ -36,6 +44,7 @@ namespace CMS.Controllers
                 return false;
             }
         }
+
         public Boolean Delete(int Id)
         {
             try
@@ -50,6 +59,7 @@ namespace CMS.Controllers
                 return false;
             }
         }
+
         public ActionResult findOne(int Id)
         {
             var result = _db.LichTiems.FirstOrDefault(x => x.Id == Id);

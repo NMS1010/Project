@@ -53,7 +53,7 @@ namespace Api.Controllers
             }
             await _db.KhachHangs.AddAsync(dto);
             await _db.SaveChangesAsync();
-            await SendMail(dto.Email, token);
+            //await SendMail(dto.Email, token);
             return Ok();
         }
 

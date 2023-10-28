@@ -18,6 +18,8 @@ namespace CMS.Models
         public virtual DbSet<NhanVien> NhanViens { get; set; }
         public virtual DbSet<VacXin> VacXins { get; set; }
         public virtual DbSet<LienHe> LienHes { get; set; }
+        public virtual DbSet<PhieuSucKhoe> PhieuSucKhoes { get; set; }
+        public virtual DbSet<HoaDon> HoaDons { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

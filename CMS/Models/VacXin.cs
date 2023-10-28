@@ -30,5 +30,7 @@ namespace CMS.Models
 
         [NotMapped]
         public string TenNCC { get; set; }
+
+        public int SoLuong { get; set; }
     }
 }

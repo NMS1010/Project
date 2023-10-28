@@ -19,6 +19,7 @@ namespace CMS.Models
         public DateTime? NgayTiem { get; set; }
 
         public int? IdVacXin { get; set; }
+        public int? IdBacSi{ get; set; }
 
         public int? TrangThai { get; set; }
 

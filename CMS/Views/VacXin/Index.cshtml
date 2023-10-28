@@ -7,23 +7,27 @@
         <div>
             <h3 class="card-title"> Vắc xin </h3>
         </div>
-        <div style="float:right">
-            <button class="btn btn-primary" id="create_sp">
-                Tạo mới
-            </button>
+        @if (Session["Menu"] == "admin")
+        {
+            <div style="float:right">
+                <button class="btn btn-primary" id="create_sp">
+                    Tạo mới
+                </button>
+            </div>
+        }
         </div>
-    </div>
     <div class="card-body">
         <table id="dataTable" class="table table-bordered  dataTable">
             <thead>
                 <tr class="text-center">
-                    <th style="text-align: center;width:10%">STT</th>
-                    <th style="text-align: center;width:20%">Mã </th>
-                    <th style="text-align: center;width:20%">Tên VacXin</th>
-                    <th style="text-align: center;width:20%">Giá tiền</th>
+                    <th style="text-align: center;width:5%">STT</th>
+                    <th style="text-align: center;width:5%">Mã </th>
+                    <th style="text-align: center;width:15%">Tên VacXin</th>
+                    <th style="text-align: center;width:15%">Giá tiền</th>
                     <th style="text-align: center;width:20%">Số Lô</th>
-                    <th style="text-align: center;width:20%">Tiêu chuẩn</th>
-                    <th style="text-align: center;width:10%">Chức năng</th>
+                    <th style="text-align: center;width:10%">Số Lượng</th>
+                    <th style="text-align: center;width:10%">Tiêu chuẩn</th>
+                    <th style="text-align: center;width:20%">Chức năng</th>
                 </tr>
             </thead>
             <tbody>
@@ -49,12 +53,19 @@
                                         @item.SoLo
                                     </td>
                                     <td style="text-align:center">
+                                        @item.SoLuong
+                                    </td>
+                                    <td style="text-align:center">
                                         @item.TieuChuan
                                     </td>
                                     <td style="text-align:center">
                                         <a id="view_" href="#" onclick="view_('@item.Id')"><i class="fas fa-eye"></i></a>
-                                        <a id="update_" href="#" onclick="update_('@item.Id')"><i class="fas fa-edit"></i></a>
-                                        <a id="delete_" href="#" onclick="delete_('@item.Id')"><i class="fas fa-trash"></i></a>
+
+                                        @if (Session["Menu"] == "admin")
+                                        {
+                                            <a id="update_" href="#" onclick="update_('@item.Id')"><i class="fas fa-edit"></i></a>
+                                            <a id="delete_" href="#" onclick="delete_('@item.Id')"><i class="fas fa-trash"></i></a>
+                                        }
                                     </td>
                                 </tr>
                         index++;
@@ -103,6 +114,10 @@
                         <div class="form-group">
                             <label for="chinhanh"> Số lô</label>
                             <input type="text" class="form-control" id="solo">
+                        </div>
+                        <div class="form-group">
+                            <label for="soluong"> Số lượng</label>
+                            <input type="text" class="form-control" id="soluong">
                         </div>
                         <div class="form-group">
                             <label for="diachi">Tiêu chuẩn </label>
@@ -155,14 +170,14 @@
             <div class="modal-body">
                 <form>
                     <div class="card-body">
-                        <input type="text" class="form-control" id="id_view" disabled>
+                        <input hidden type="text" class="form-control" id="id_view" disabled>
                         <div class="form-group">
                             <label for="tendl"> Tên VacXin </label>
-                            <input type="text" class="form-control" id="ten_view">
+                            <input readonly type="text" class="form-control" id="ten_view">
                         </div>
                         <div class="form-group">
                             <label for="diachi">Nhà cung cấp </label>
-                            <select class="form-control" id="nhacungcap_view">
+                            <select disabled class="form-control" id="nhacungcap_view">
                                 @{
                                     foreach (var item in ViewBag.NhaCungCap)
                                     {
@@ -173,15 +188,19 @@
                         </div>
                         <div class="form-group">
                             <label for="diachi">Giá tiền </label>
-                            <input type="text" class="form-control" id="giatien_view">
+                            <input readonly type="text" class="form-control" id="giatien_view">
                         </div>
                         <div class="form-group">
                             <label for="diachi"> Số lô </label>
-                            <input type="text" class="form-control" id="solo_view">
+                            <input readonly type="text" class="form-control" id="solo_view">
+                        </div>
+                        <div class="form-group">
+                            <label for="soluong_view"> Số lượng </label>
+                            <input readonly type="text" class="form-control" id="soluong_view">
                         </div>
                         <div class="form-group">
                             <label for="chinhanh"> Tiêu chuẩn </label>
-                            <input type="text" class="form-control" id="tieuchuan_view">
+                            <input readonly type="text" class="form-control" id="tieuchuan_view">
                         </div>
                     </div>
                 </form>
@@ -201,6 +220,7 @@
         $('#nhacungcap').val();
         $('#solo').val();
         $('#tieuchuan').val();
+        $('#soluong').val();
         $('#create_view').modal('show');
     });
     $("#create").click(function () {
@@ -212,6 +232,7 @@
             NCCId: $('#nhacungcap').val(),
             GiaTien: $('#giatien').val(),
             SoLo: $('#solo').val(),
+            SoLuong: $('#soluong').val(),
             TieuChuan: $('#tieuchuan').val(),
         };
         $.ajax({
@@ -259,6 +280,7 @@
                     $('#giatien').val(data.GiaTien);
                     $('#nhacungcap').val(data.NCCId);
                     $('#solo').val(data.SoLo);
+                    $('#soluong').val(data.SoLuong);
                     $('#tieuchuan').val(data.TieuChuan);
                 }
                 $('#create_view').modal('show');
@@ -315,6 +337,7 @@
                     $('#nhacungcap_view').val(data.NCCId);
                     $('#giatien_view').val(data.GiaTien);
                     $('#solo_view').val(data.SoLo);
+                    $('#soluong_view').val(data.SoLuong);
                     $('#tieuchuan_view').val(data.TieuChuan);
                 }
                 $('#view').modal('show');

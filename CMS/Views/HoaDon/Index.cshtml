@@ -1,0 +1,67 @@
+﻿@{
+    ViewBag.Title = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="card">
+    <div class="card-header">
+        <div>
+            <h3 class="card-title"> Hoá đơn thanh toán:</h3>
+        </div>
+    </div>
+    <div class="card-body">
+        <table id="dataTable" class="table table-bordered  dataTable">
+            <thead>
+                <tr class="text-center">
+                    <th style="text-align: center;width:5%">STT</th>
+                    <th style="text-align: center;width:5%">Mã </th>
+                    <th style="text-align: center;width:20%">Người thanh toán</th>
+                    <th style="text-align: center;width:10%">Tổng tiền</th>
+                    <th style="text-align: center;width:15%">Ngày thanh toán</th>
+                    <th style="text-align: center;width:20%">Địa điểm tiêm</th>
+                    <th style="text-align: center;width:15%">Ngày tiêm</th>
+                    <th style="text-align: center;width:20%">Vacxin</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int index = 1;
+                    string ma = "HD0";
+                    var lichtiems = ViewBag.LichTiem as IEnumerable<CMS.Models.LichTiem>;
+                    foreach (var item in ViewBag.result)
+                    {
+                        var lt = lichtiems.Where(x => x.Id == item.IdLichTiem).FirstOrDefault();
+                        var vacxins = ViewBag.VacXin as IEnumerable<CMS.Models.VacXin>;
+                        var vx = vacxins.Where(x => x.Id == lt.IdVacXin).FirstOrDefault();
+                        <tr>
+                            <td style="text-align:center">
+                                @index
+                            </td>
+                            <td style="text-align:center">
+                                @ma@item.Id
+                            </td>
+                            <td style="text-align:center">
+                                @item.NguoiThanhToan
+                            </td>
+                            <td style="text-align:center">
+                                @item.TongTien
+                            </td>
+                            <td style="text-align:center">
+                                @item.NgayThanhToan.ToString()
+                            </td>
+                            <td style="text-align:center">
+                                @lt.DiaDiemTiem
+                            </td>
+                            <td style="text-align:center">
+                                @lt.NgayTiem.ToString()
+                            </td>
+                            <td style="text-align:center">
+                                @vx.Ten
+                            </td>
+                        </tr>
+                        index++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
